@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+import 'package:localstorage/localstorage.dart';
 
 import '../main.dart';
 import '../widgets/button.dart';
@@ -11,7 +12,22 @@ class Home extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final LocalStorage storage = LocalStorage('water_dairy.json');
     final dailyWaterIntake = ref.watch(dailyWaterIntakeProvider);
+
+    useEffect(() {
+      Future<void> loadStorage() async {
+        await storage.ready;
+        final data = storage.getItem('daily_water_intake');
+        if (data != null) {
+          ref.read(dailyWaterIntakeProvider.notifier).loadData(data);
+        } else {
+          await storage.setItem("daily_water_intake", dailyWaterIntake);
+        }
+      }
+
+      loadStorage();
+    }, []);
 
 
     return Scaffold(

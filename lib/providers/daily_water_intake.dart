@@ -31,6 +31,10 @@ class DailyWaterIntakeController extends StateNotifier<DailyWaterIntake> {
   DailyWaterIntakeController()
       : super(DailyWaterIntake(id: _uuid.v4(), intake: 0));
 
+  void loadData(DailyWaterIntake dailyWaterIntake) {
+    state = dailyWaterIntake;
+  }
+
   void setDailyGoal(double goal) {
     state = DailyWaterIntake(
       id: _uuid.v4(),

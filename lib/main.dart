@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:localstorage/localstorage.dart';
 
 import 'providers/daily_water_intake.dart';
 import 'providers/other_state_objects.dart';
@@ -20,7 +22,18 @@ final OtherStateObjectsProvider =
 });
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  HomeWidget.registerBackgroundCallback(backgroundCallback);
   runApp(const ProviderScope(child: MyApp()));
+}
+
+// Called when Doing Background Work initiated from Widget
+void backgroundCallback(Uri? uri) async {
+    await HomeWidget.getWidgetData<int>('', defaultValue: 0).then((value) {
+    });
+    // await HomeWidget.saveWidgetData<int>('_counter', _counter);
+    // await HomeWidget.updateWidget(name: 'AppWidgetProvider', iOSName: 'AppWidgetProvider');
+
 }
 
 class MyApp extends StatelessWidget {
