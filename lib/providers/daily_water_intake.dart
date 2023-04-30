@@ -10,7 +10,7 @@ class DailyWaterIntake {
   const DailyWaterIntake({
     required this.id,
     required this.intake,
-    this.goal = 1000.0,
+    this.goal = 0.0,
     this.completed = false,
     this.intakePercentage = 0.0,
   });
@@ -31,12 +31,12 @@ class DailyWaterIntakeController extends StateNotifier<DailyWaterIntake> {
   DailyWaterIntakeController()
       : super(DailyWaterIntake(id: _uuid.v4(), intake: 0));
 
-  void setInitialGoal(double goal) {
+  void setDailyGoal(double goal) {
     state = DailyWaterIntake(
       id: _uuid.v4(),
       goal: goal,
-      intake: 1000.0,
-      completed: false,
+      intake: state.intake,
+      completed: state.completed,
     );
   }
 
@@ -48,7 +48,7 @@ class DailyWaterIntakeController extends StateNotifier<DailyWaterIntake> {
     }
 
     state = DailyWaterIntake(
-      id: _uuid.v4(),
+      id: state.id,
       goal: state.goal,
       intake: currentIntake,
       completed: currentIntake >= state.goal ? true : state.completed,

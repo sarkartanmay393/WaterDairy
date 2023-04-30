@@ -5,9 +5,11 @@ import 'package:riverpod/riverpod.dart';
 class OtherStateObjects {
   const OtherStateObjects({
     required this.currentTabIndex,
+    this.showDailyGoalPicker = false,
   });
 
   final int currentTabIndex;
+  final bool showDailyGoalPicker;
 }
 
 class OtherStateObjectsController extends StateNotifier<OtherStateObjects> {
@@ -16,6 +18,13 @@ class OtherStateObjectsController extends StateNotifier<OtherStateObjects> {
 
   void setInitialObjects() {
     state = const OtherStateObjects(currentTabIndex: 0);
+  }
+
+  void toggleDailyGoalPicker() {
+    state = OtherStateObjects(
+      currentTabIndex: state.currentTabIndex,
+      showDailyGoalPicker: !state.showDailyGoalPicker,
+    );
   }
 
   void changeTabIndex(int index) {

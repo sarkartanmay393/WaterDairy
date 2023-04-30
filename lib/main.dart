@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Water Dairy",
       theme: ThemeData(
+        useMaterial3: true,
         primarySwatch: Colors.green,
       ),
       home: const Layout(),
