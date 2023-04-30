@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
 import '../main.dart';
+import '../widgets/button.dart';
 
 class Home extends HookConsumerWidget {
   const Home({Key? key}) : super(key: key);
@@ -41,73 +42,94 @@ class Home extends HookConsumerWidget {
             //           child: const Text("Set")),
             //     ],
             //   ),
-            SizedBox(
-              height: 300,
-              width: 300,
-              child: Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  SizedBox(
-                    height: 300,
-                    width: 300,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 6,
-                      backgroundColor: Colors.grey.shade200,
-                      value: dailyWaterIntake.intakePercentage,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 28, 0, 8),
+              child: SizedBox(
+                height: 300,
+                width: 300,
+                child: Stack(
+                  alignment: AlignmentDirectional.center,
+                  children: [
+                    SizedBox(
+                      height: 300,
+                      width: 300,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 6,
+                        backgroundColor: Colors.grey.shade200,
+                        value: dailyWaterIntake.intakePercentage,
+                      ),
                     ),
-                  ),
-                  Column(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '${(dailyWaterIntake.intakePercentage * 100).toStringAsFixed(0)}%',
+                          style: const TextStyle(
+                              fontSize: 42, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(
+                          height: 6,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${dailyWaterIntake.goal} ',
+                              style: const TextStyle(
+                                  fontSize: 36, fontWeight: FontWeight.w400),
+                            ),
+                            const Text(
+                              'ml',
+                              style: TextStyle(
+                                  fontSize: 36, fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          'Remain: ${dailyWaterIntake.intake} ml',
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            TextButton(
+              onPressed: dailyWaterIntake.completed ? () => {
+                ref.read(dailyWaterIntakeProvider.notifier).resetIntake(),
+              } : null,
+              child: const Text('Reset Intake'),
+            ),
+
+            Container(
+              margin: const EdgeInsets.all(16.0),
+              height: 280,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${dailyWaterIntake.goal} ',
-                            style: const TextStyle(
-                                fontSize: 36, fontWeight: FontWeight.bold),
-                          ),
-                          const Text(
-                            'ml',
-                            style: TextStyle(
-                                fontSize: 36, fontWeight: FontWeight.w300),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        'Remain: ${dailyWaterIntake.intake} ml',
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w400),
-                      ),
+                    children: const [
+                      GridButton(intakeML: 50),
+                      SizedBox(width: 12),
+                      GridButton(intakeML: 100),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      GridButton(intakeML: 150),
+                      SizedBox(width: 12),
+                      GridButton(intakeML: 200),
                     ],
                   ),
                 ],
               ),
             ),
-
-            // SimpleCircularProgressBar(
-            //   size: 300,
-            //   progressColors: const [Colors.green],
-            //   backColor: Colors.grey.shade200,
-            //   mergeMode: true,
-            //   valueNotifier:
-            //       ValueNotifier<double>(dailyWaterIntake.intakePercentage),
-            // ),
-
-            if (!dailyWaterIntake.completed)
-              TextButton(
-                onPressed: () => {
-                  ref.read(dailyWaterIntakeProvider.notifier).addIntake(50.0),
-                },
-                child: const Text('Add Intake (50ml)'),
-              ),
-            if (dailyWaterIntake.completed)
-              TextButton(
-                onPressed: () => {
-                  ref.read(dailyWaterIntakeProvider.notifier).resetIntake(),
-                },
-                child: const Text('Reset Intake'),
-              ),
           ],
         ),
       ),
