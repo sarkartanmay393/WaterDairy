@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:riverpod/riverpod.dart';
 import 'package:uuid/uuid.dart';
+import 'package:riverpod/riverpod.dart';
 
 const _uuid = Uuid();
 
@@ -36,19 +36,27 @@ class DailyWaterIntakeController extends StateNotifier<DailyWaterIntake> {
   }
 
   void setDailyGoal(double goal) {
+    double currentIntakePercentage = (state.intake / goal);
+    if (currentIntakePercentage < 0.0 && currentIntakePercentage > 1.0) {
+      currentIntakePercentage = 1.0;
+    }
+
     state = DailyWaterIntake(
       id: _uuid.v4(),
       goal: goal,
       intake: state.intake,
-      completed: state.completed,
+      completed: state.intake >= goal ? true : state.completed,
+      intakePercentage: currentIntakePercentage,
     );
   }
 
   void addIntake(double intakeAmount) {
     double currentIntake = state.intake + intakeAmount;
     double currentIntakePercentage = (currentIntake / state.goal);
-    if (!(currentIntakePercentage > 0.0 && currentIntakePercentage <= 1.0)) {
-      currentIntakePercentage = 0.0;
+    if (currentIntakePercentage < 0.0 &&
+        currentIntakePercentage > 1.0 &&
+        currentIntakePercentage.isInfinite) {
+      currentIntakePercentage = 1.0;
     }
 
     state = DailyWaterIntake(

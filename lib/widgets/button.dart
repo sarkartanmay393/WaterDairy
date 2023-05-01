@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:waterdairy/main.dart';
+
+import '../main.dart';
 
 class GridButton extends HookConsumerWidget {
   const GridButton({super.key, required this.intakeML});

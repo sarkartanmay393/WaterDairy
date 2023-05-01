@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:waterdairy/screens/history.dart';
-import 'package:waterdairy/screens/home.dart';
-import 'package:waterdairy/screens/profile.dart';
 
 import 'main.dart';
+import 'screens/history.dart';
+import 'screens/home.dart';
+import 'screens/profile.dart';
 
 class Layout extends HookConsumerWidget {
   const Layout({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final otherStateObjects = ref.watch(OtherStateObjectsProvider);
+    final otherStateObjects = ref.watch(otherStateObjectsProvider);
     final screens = [const Home(), const History(), const Profile()];
 
     return Scaffold(
@@ -28,7 +28,7 @@ class Layout extends HookConsumerWidget {
         ],
         currentIndex: otherStateObjects.currentTabIndex,
         onTap: (value) => {
-          ref.read(OtherStateObjectsProvider.notifier).changeTabIndex(value)
+          ref.read(otherStateObjectsProvider.notifier).changeTabIndex(value)
         },
       ),
     );

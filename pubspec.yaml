@@ -39,9 +39,8 @@ dependencies:
   hooks_riverpod: ^2.3.6
   uuid: ^3.0.7
   font_awesome_flutter: ^10.4.0
-  simple_circular_progress_bar: ^1.0.2
-  home_widget: ^0.2.0+1
-  localstorage: ^4.0.1+2
+  shared_preferences: ^2.1.0
+  
 
 dev_dependencies:
   flutter_test:

@@ -8,8 +8,7 @@ class DailyGoalDialog extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dailyWaterIntake = ref.watch(dailyWaterIntakeProvider);
-    final otherStateObjects = ref.watch(OtherStateObjectsProvider);
+    final formKey = GlobalKey<FormState>();
     final goalAmountController = TextEditingController();
 
     void setDailyGoal() {
@@ -26,26 +25,50 @@ class DailyGoalDialog extends HookConsumerWidget {
           child: SizedBox(
             width: MediaQuery.of(context).size.width * 0.75,
             height: MediaQuery.of(context).size.height * 1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextField(
-                  controller: goalAmountController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Enter a search term',
-                    labelText: "Daily Water Intake Goal (ml)",
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-                MaterialButton(onPressed: setDailyGoal, child: const Text("SET")),
-              ],
-            ),
+            child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      autofocus: true,
+                      controller: goalAmountController,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.go,
+                      onFieldSubmitted: (_) => setDailyGoal(),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Enter a search term',
+                        labelText: "Daily Water Intake Goal (ml)",
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MaterialButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6)),
+                          height: 28,
+                          highlightColor: Colors.green,
+                          onPressed: setDailyGoal,
+                          child: const Text("SET"),
+                        ),
+                        MaterialButton(
+                          height: 28,
+                          highlightColor: Colors.red,
+                          onPressed: () => {
+                            Navigator.pop(context),
+                          },
+                          child: const Text("CANCEL"),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
           ),
         ),
       ),
-      backgroundColor: Colors.white.withOpacity(
-          0.85), // this is the main reason of transparency at next screen. I am ignoring rest implementation but what i have achieved is you can see.
+      backgroundColor: Colors.white.withOpacity(0.9),
     );
   }
 }

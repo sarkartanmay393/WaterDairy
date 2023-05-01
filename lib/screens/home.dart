@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:localstorage/localstorage.dart';
 
 import '../main.dart';
 import '../widgets/button.dart';
@@ -12,23 +10,7 @@ class Home extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final LocalStorage storage = LocalStorage('water_dairy.json');
     final dailyWaterIntake = ref.watch(dailyWaterIntakeProvider);
-
-    useEffect(() {
-      Future<void> loadStorage() async {
-        await storage.ready;
-        final data = storage.getItem('daily_water_intake');
-        if (data != null) {
-          ref.read(dailyWaterIntakeProvider.notifier).loadData(data);
-        } else {
-          await storage.setItem("daily_water_intake", dailyWaterIntake);
-        }
-      }
-
-      loadStorage();
-    }, []);
-
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -50,7 +32,8 @@ class Home extends HookConsumerWidget {
                         height: 300,
                         width: 300,
                         child: CircularProgressIndicator(
-                          strokeWidth: 6,
+                          strokeWidth: 8,
+                          color: Colors.blue.shade400,
                           backgroundColor: Colors.grey.shade200,
                           value: dailyWaterIntake.intakePercentage,
                         ),
@@ -92,27 +75,54 @@ class Home extends HookConsumerWidget {
                   ),
                 ),
               ),
-              dailyWaterIntake.completed
-                  ? TextButton(
-                      onPressed: dailyWaterIntake.completed
-                          ? () => {
-                                ref
-                                    .read(dailyWaterIntakeProvider.notifier)
-                                    .resetIntake(),
-                              }
-                          : null,
-                      child: const Text('Reset Intake'),
-                    )
-                  : TextButton(
-                      onPressed: () => {
-                        Navigator.of(context).push(PageRouteBuilder(
+              Container(
+                margin: const EdgeInsets.only(top: 12),
+                child: dailyWaterIntake.completed
+                    ? TextButton(
+                        style: ButtonStyle(
+                          tapTargetSize: MaterialTapTargetSize.padded,
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6))),
+                        ),
+                        onPressed: dailyWaterIntake.completed
+                            ? () => {
+                                  ref
+                                      .read(dailyWaterIntakeProvider.notifier)
+                                      .resetIntake(),
+                                }
+                            : null,
+                        child: const Text(
+                          'RESET INTAKE',
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    : TextButton(
+                        style: ButtonStyle(
+                          tapTargetSize: MaterialTapTargetSize.padded,
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6))),
+                        ),
+                        onPressed: () => {
+                          Navigator.of(context).push(PageRouteBuilder(
                             opaque: false,
                             pageBuilder: (BuildContext context, _, __) =>
-                                const DailyGoalDialog()
-                        ))
-                      },
-                      child: const Text('Set Daily Goal'),
-                    ),
+                                const DailyGoalDialog(),
+                          ))
+                        },
+                        child: const Text(
+                          'SET DAILY GOAL',
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+              ),
               SizedBox(
                 height: 280,
                 child: Column(
