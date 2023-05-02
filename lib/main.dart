@@ -1,26 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:waterdairy/screens/history.dart';
+import 'package:waterdairy/screens/profile.dart';
+import 'package:provider/provider.dart';
 
-import 'providers/daily_water_intake.dart';
-import 'providers/other_state_objects.dart';
 import 'layout.dart';
+import 'screens/home.dart';
+import 'state/provider.dart';
 
-final addDailyWaterIntakeKey = UniqueKey();
-final completedFilterKey = UniqueKey();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox('water_dairy');
 
-final dailyWaterIntakeProvider =
-    StateNotifierProvider<DailyWaterIntakeController, DailyWaterIntake>((ref) {
-  return DailyWaterIntakeController();
-});
-
-final otherStateObjectsProvider =
-    StateNotifierProvider<OtherStateObjectsController, OtherStateObjects>(
-        (ref) {
-  return OtherStateObjectsController();
-});
-
-void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -28,15 +21,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // showPerformanceOverlay: true,
-      debugShowCheckedModeBanner: false,
-      title: "Water Dairy",
-      theme: ThemeData(
-        useMaterial3: true,
-        primarySwatch: Colors.green,
+    return ChangeNotifierProvider.value(
+      value: WaterDairyDataFlow(),
+      child: MaterialApp(
+        // showPerformanceOverlay: true,
+        debugShowCheckedModeBanner: false,
+        title: "Water Dairy",
+        theme: ThemeData(
+          useMaterial3: true,
+          primarySwatch: Colors.green,
+        ),
+        home: const Layout(),
+        routes: {
+          Home.routeName: (context) => const Home(),
+          History.routeName: (context) => const History(),
+          Profile.routeName: (context) => const Profile(),
+        },
       ),
-      home: const Layout(),
     );
   }
 }
