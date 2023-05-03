@@ -85,48 +85,47 @@ class _Home extends State<Home> {
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 12),
-                  child: waterDairyDataFlow.dailyWaterIntake.completed
-                      ? TextButton(
-                          style: ButtonStyle(
-                            tapTargetSize: MaterialTapTargetSize.padded,
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6))),
-                          ),
-                          onPressed: () =>
-                              waterDairyDataFlow.resetDailyWaterIntake(),
-                          child: const Text(
-                            'RESET INTAKE',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )
-                      : TextButton(
-                          style: ButtonStyle(
-                            tapTargetSize: MaterialTapTargetSize.padded,
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6))),
-                          ),
-                          onPressed: () => {
-                            Navigator.of(context).push(PageRouteBuilder(
-                              opaque: false,
-                              pageBuilder: (c, _, __) =>
-                                  const DailyGoalDialog(),
-                            ))
-                          },
-                          child: const Text(
-                            'SET DAILY GOAL',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                Column(
+                  children: [
+                    TextButton(
+                      style: ButtonStyle(
+                        overlayColor:
+                            MaterialStateProperty.all(Colors.redAccent),
+                        tapTargetSize: MaterialTapTargetSize.padded,
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6))),
+                      ),
+                      onPressed: () =>
+                          waterDairyDataFlow.resetDailyWaterIntake(),
+                      child: const Text(
+                        'RESET INTAKE',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        tapTargetSize: MaterialTapTargetSize.padded,
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6))),
+                      ),
+                      onPressed: () => {
+                        Navigator.of(context).push(PageRouteBuilder(
+                          opaque: false,
+                          pageBuilder: (c, _, __) => const DailyGoalDialog(),
+                        ))
+                      },
+                      child: const Text(
+                        'SET DAILY GOAL',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 280,

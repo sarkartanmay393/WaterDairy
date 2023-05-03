@@ -21,69 +21,54 @@ class DailyWaterIntake {
 
 class WaterDairyDataFlow extends ChangeNotifier {
   DailyWaterIntake _dailyWaterIntake = DailyWaterIntake(id: uuid.v4());
-  final Map<String, dynamic> _otherStateObjects = {
-    "tabIndex": 0,
-  };
+  final List<DailyWaterIntake> _dailyWaterIntakeHistory = [];
 
   DailyWaterIntake get dailyWaterIntake => _dailyWaterIntake;
-  Map<String, dynamic> get otherStateObjects => _otherStateObjects;
-  int get tabIndex => _otherStateObjects["tabIndex"];
 
   void addIntake(double intake) {
-    double percentage =
-        _dailyWaterIntake.intake + intake / _dailyWaterIntake.goal;
-    if (percentage > 1.0) {
-      percentage = 1.0;
-    } else if (percentage.isNaN || percentage.isInfinite) {
-      percentage = 0.0;
+    double currentIntake = _dailyWaterIntake.intake + intake;
+    double percentage = currentIntake / _dailyWaterIntake.goal;
+    if (percentage.isNaN || percentage.isInfinite) {
+      percentage = -0.01;
     }
 
     _dailyWaterIntake = DailyWaterIntake(
       id: _dailyWaterIntake.id,
       goal: _dailyWaterIntake.goal,
-      intake: _dailyWaterIntake.intake + intake,
-      completed: _dailyWaterIntake.intake + intake >= _dailyWaterIntake.goal,
+      intake: currentIntake,
+      completed: currentIntake >= _dailyWaterIntake.goal,
       intakePercentage: percentage,
     );
+
     notifyListeners();
   }
 
-  void addDailyGoal(double goal) {
+  void setDailyGoal(double goal) {
     double percentage = _dailyWaterIntake.intake / goal;
-    if (percentage > 1.0) {
-      percentage = 1.0;
-    } else if (percentage.isNaN || percentage.isInfinite) {
-      percentage = 0.0;
+    if (percentage.isNaN || percentage.isInfinite) {
+      percentage = -0.01;
     }
 
     _dailyWaterIntake = DailyWaterIntake(
-      id: uuid.v4(),
+      id: _dailyWaterIntake.id,
       goal: goal,
       intake: _dailyWaterIntake.intake,
       completed: _dailyWaterIntake.intake >= goal,
       intakePercentage: percentage,
     );
-    notifyListeners();
-  }
 
-  void setDailyWaterIntake(DailyWaterIntake dailyWaterIntake) {
-    _dailyWaterIntake = DailyWaterIntake(
-      id: dailyWaterIntake.id,
-      goal: dailyWaterIntake.goal,
-      intake: dailyWaterIntake.intake,
-      completed: _dailyWaterIntake.intake >= _dailyWaterIntake.goal,
-      intakePercentage: _dailyWaterIntake.intakePercentage,
-    );
     notifyListeners();
   }
 
   void resetDailyWaterIntake() {
-    _dailyWaterIntake = DailyWaterIntake(id: uuid.v4());
-    notifyListeners();
-  }
+    _dailyWaterIntake = DailyWaterIntake(
+      id: _dailyWaterIntake.id,
+      goal: _dailyWaterIntake.goal,
+      intake: 0.0,
+      completed: false,
+      intakePercentage: 0.0,
+    );
 
-  void changeTabIndex(int index) {
-    _otherStateObjects["tabIndex"] = index;
     notifyListeners();
   }
 }

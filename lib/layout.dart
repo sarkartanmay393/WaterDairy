@@ -17,6 +17,8 @@ class Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<Layout> {
+  int _index = 0;
+
   @override
   Widget build(BuildContext context) {
     final screens = [const Home(), const History(), const Profile()];
@@ -26,15 +28,19 @@ class _LayoutState extends State<Layout> {
         appBar: AppBar(
           title: const Text("Water Dairy"),
         ),
-        body: screens[waterDairyDataFlow.tabIndex],
+        body: screens[_index],
         bottomNavigationBar: BottomNavigationBar(
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home_max), label: "Home"),
             BottomNavigationBarItem(icon: Icon(Icons.history), label: "Stats"),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
           ],
-          currentIndex: waterDairyDataFlow.tabIndex,
-          onTap: (value) => waterDairyDataFlow.changeTabIndex(value),
+          currentIndex: _index,
+          onTap: (value) => {
+            setState(() {
+              _index = value;
+            })
+          },
         ),
       ),
     );

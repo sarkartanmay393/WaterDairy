@@ -2,14 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waterdairy/state/provider.dart';
 
-class DailyGoalDialog extends StatelessWidget {
+class DailyGoalDialog extends StatefulWidget {
   const DailyGoalDialog({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final goalAmountController = TextEditingController();
+  State<DailyGoalDialog> createState() => _DailyGoalDialogState();
+}
 
+class _DailyGoalDialogState extends State<DailyGoalDialog> {
+  final formKey = GlobalKey<FormState>();
+  late TextEditingController goalAmountController;
+
+  @override
+  void initState() {
+    super.initState();
+    goalAmountController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    goalAmountController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
@@ -29,7 +46,7 @@ class DailyGoalDialog extends StatelessWidget {
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.go,
                         onFieldSubmitted: (_) => {
-                          waterDairyDataFlow.addDailyGoal(
+                          waterDairyDataFlow.setDailyGoal(
                               double.parse(goalAmountController.text)),
                           Navigator.pop(context),
                         },
@@ -48,7 +65,7 @@ class DailyGoalDialog extends StatelessWidget {
                             height: 28,
                             highlightColor: Colors.green,
                             onPressed: () => {
-                              waterDairyDataFlow.addDailyGoal(
+                              waterDairyDataFlow.setDailyGoal(
                                   double.parse(goalAmountController.text)),
                               Navigator.pop(context),
                             },
